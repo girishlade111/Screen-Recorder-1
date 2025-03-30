@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Recorder</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        ..dark-mode {
+            background-color: #333;
+            color: #eee;
+        }
+
+        #controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #preview {
+            max-width: 80%;
+            max-height: 60vh;
+            margin-bottom: 20px;
+        }
+
+        #options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="options">
+        <select id="screen-source">
+            <option value="monitor">Full Screen</option>
+            <option value="window">Application Window</option>
+            <option value="browser">Browser Tab</option>
+        </select>
+        <label>
+            <input type="checkbox" id="audio-toggle"> Record Audio
+        </label>
+        <button id="theme-toggle">Dark Mode</button>
+    </div>
+
+    <div id="controls">
+        <button id="start-btn">Start Recording</button>
+        <button id="stop-btn" disabled>Stop Recording</button>
+        <button id="download-btn" disabled>Download</button>
+    </div>
+
+    <video id="preview" controls></video>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        let stream;
+        let isDarkMode = false;
+
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const preview = document.getElementById('preview');
+        const audioToggle = document.getElementById('audio-toggle');
+        const screenSource = document.getElementById('screen-source');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        async function startRecording() {
+            try {
+                const displayMediaOptions = {
+                    video: { displaySurface: screenSource.value },
+                    audio: audioToggle.checked
+                };
+
+                stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    preview.src = url;
+                    downloadBtn.href = url;
+                    downloadBtn.download = 'screen-recording.webm';
+                    downloadBtn.disabled = false;
+                    recordedChunks = [];
+                };
+
+                mediaRecorder.start();
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } catch (error) {
+                console.error('Error starting recording:', error);
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                stream.getTracks().forEach(track => track.stop());
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        }
+
+        startBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            body.classList.toggle('dark-mode', isDarkMode);
+            themeToggle.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+        });
+    </script>
+</body>
+</html>
