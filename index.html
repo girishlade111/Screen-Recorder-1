@@ -3,144 +3,1279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Screen Recorder</title>
+    <title>ProScreen Recorder | Enterprise Screen Recording</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --danger-color: #dc2626;
+            --danger-hover: #b91c1c;
+            --success-color: #16a34a;
+            --success-hover: #15803d;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: var(--transition);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), #7c3aed);
+            border-radius: var(--radius-md);
+            display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+            color: white;
+            font-size: 1.25rem;
         }
 
-        ..dark-mode {
-            background-color: #333;
-            color: #eee;
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
-        #controls {
-            margin-bottom: 20px;
+        .logo-text span {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
             display: flex;
-            gap: 10px;
+            gap: 0.75rem;
+            align-items: center;
         }
 
-        button {
-            padding: 10px 15px;
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-select,
+        .form-input {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-family: inherit;
+            transition: var(--transition);
             cursor: pointer;
+        }
+
+        .form-select:hover,
+        .form-input:hover {
+            border-color: var(--primary-color);
+        }
+
+        .form-select:focus,
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toggle-group:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toggle-label svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: inherit;
             border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
             color: white;
         }
 
-        button:disabled {
-            background-color: #ccc;
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--danger-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: var(--success-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--border-color);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Recording Area */
+        .recording-area {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recording-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .recording-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .recording-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .status-indicator.recording {
+            background: var(--danger-color);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Preview Container */
+        .preview-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed var(--border-color);
+        }
+
+        .preview-container.has-content {
+            border-style: solid;
+            border-color: var(--border-color);
+        }
+
+        .preview-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+        }
+
+        .preview-placeholder svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .preview-placeholder p {
+            font-size: 0.875rem;
         }
 
         #preview {
-            max-width: 80%;
-            max-height: 60vh;
-            margin-bottom: 20px;
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: var(--radius-md);
+            display: none;
         }
 
-        #options {
+        #preview.visible {
+            display: block;
+        }
+
+        /* Timer Display */
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-primary);
+            text-align: center;
+            margin: 1rem 0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', monospace;
+        }
+
+        .timer-display.recording {
+            color: var(--danger-color);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        /* Theme Toggle Button */
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .toast {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .toast-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .toast.success .toast-icon { color: var(--success-color); }
+        .toast.error .toast-icon { color: var(--danger-color); }
+        .toast.info .toast-icon { color: var(--primary-color); }
+
+        .toast-message {
+            flex: 1;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .timer-display {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .toast-container {
+                left: 1rem;
+                right: 1rem;
+                bottom: 1rem;
+            }
+
+            .toast {
+                min-width: auto;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div id="options">
-        <select id="screen-source">
-            <option value="monitor">Full Screen</option>
-            <option value="window">Application Window</option>
-            <option value="browser">Browser Tab</option>
-        </select>
-        <label>
-            <input type="checkbox" id="audio-toggle"> Record Audio
-        </label>
-        <button id="theme-toggle">Dark Mode</button>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">📹</div>
+                <div class="logo-text">Pro<span>Screen</span> Recorder</div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Recording Settings
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="screen-source">Source Type</label>
+                    <select class="form-select" id="screen-source">
+                        <option value="monitor">🖥️ Full Screen</option>
+                        <option value="window">🪟 Application Window</option>
+                        <option value="browser">🌐 Browser Tab</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="quality-select">Video Quality</label>
+                    <select class="form-select" id="quality-select">
+                        <option value="high">High (1080p)</option>
+                        <option value="medium" selected>Medium (720p)</option>
+                        <option value="low">Low (480p)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="fps-select">Frame Rate</label>
+                    <select class="form-select" id="fps-select">
+                        <option value="60">60 FPS</option>
+                        <option value="30" selected>30 FPS</option>
+                        <option value="15">15 FPS</option>
+                    </select>
+                </div>
+
+                <div class="section-title" style="margin-top: 1.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                    Audio Options
+                </div>
+
+                <div class="toggle-group">
+                    <span class="toggle-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                        </svg>
+                        System Audio
+                    </span>
+                    <div class="toggle-switch" id="system-audio-toggle"></div>
+                </div>
+
+                <div class="toggle-group">
+                    <span class="toggle-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                        </svg>
+                        Microphone
+                    </span>
+                    <div class="toggle-switch" id="mic-audio-toggle"></div>
+                </div>
+
+                <div class="section-title" style="margin-top: 1.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Advanced
+                </div>
+
+                <div class="toggle-group">
+                    <span class="toggle-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Include Cursor
+                    </span>
+                    <div class="toggle-switch active" id="cursor-toggle"></div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary btn-block" id="start-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Start Recording
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Recording Area -->
+            <section class="recording-area">
+                <div class="recording-header">
+                    <h2 class="recording-title">Preview & Controls</h2>
+                    <div class="recording-status">
+                        <div class="status-indicator" id="status-indicator"></div>
+                        <span id="status-text">Ready</span>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-display">00:00:00</div>
+
+                <div class="preview-container" id="preview-container">
+                    <div class="preview-placeholder" id="preview-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <p>Your recording preview will appear here</p>
+                        <p style="font-size: 0.75rem; margin-top: 0.5rem;">Click "Start Recording" to begin</p>
+                    </div>
+                    <video id="preview" controls></video>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="duration-stat">00:00</div>
+                        <div class="stat-label">Duration</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="size-stat">0 MB</div>
+                        <div class="stat-label">File Size</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="format-stat">WebM</div>
+                        <div class="stat-label">Format</div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-danger" id="stop-btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                        </svg>
+                        Stop Recording
+                    </button>
+                    <button class="btn btn-success" id="download-btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download Video
+                    </button>
+                    <button class="btn btn-secondary" id="pause-btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Pause
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>ProScreen Recorder © 2024 | Enterprise-grade screen recording solution</p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem;">All recordings are processed locally in your browser. No data is sent to servers.</p>
+        </footer>
     </div>
 
-    <div id="controls">
-        <button id="start-btn">Start Recording</button>
-        <button id="stop-btn" disabled>Stop Recording</button>
-        <button id="download-btn" disabled>Download</button>
-    </div>
-
-    <video id="preview" controls></video>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
 
     <script>
-        let mediaRecorder;
-        let recordedChunks = [];
-        let stream;
-        let isDarkMode = false;
+        // State Management
+        const state = {
+            isRecording: false,
+            isPaused: false,
+            mediaRecorder: null,
+            stream: null,
+            audioStream: null,
+            combinedStream: null,
+            recordedChunks: [],
+            startTime: null,
+            timerInterval: null,
+            pauseTime: null,
+            totalPausedDuration: 0,
+            isDarkMode: false
+        };
 
-        const startBtn = document.getElementById('start-btn');
-        const stopBtn = document.getElementById('stop-btn');
-        const downloadBtn = document.getElementById('download-btn');
-        const preview = document.getElementById('preview');
-        const audioToggle = document.getElementById('audio-toggle');
-        const screenSource = document.getElementById('screen-source');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
+        // DOM Elements
+        const elements = {
+            startBtn: document.getElementById('start-btn'),
+            stopBtn: document.getElementById('stop-btn'),
+            pauseBtn: document.getElementById('pause-btn'),
+            downloadBtn: document.getElementById('download-btn'),
+            preview: document.getElementById('preview'),
+            previewContainer: document.getElementById('preview-container'),
+            previewPlaceholder: document.getElementById('preview-placeholder'),
+            timerDisplay: document.getElementById('timer-display'),
+            statusIndicator: document.getElementById('status-indicator'),
+            statusText: document.getElementById('status-text'),
+            screenSource: document.getElementById('screen-source'),
+            qualitySelect: document.getElementById('quality-select'),
+            fpsSelect: document.getElementById('fps-select'),
+            systemAudioToggle: document.getElementById('system-audio-toggle'),
+            micAudioToggle: document.getElementById('mic-audio-toggle'),
+            cursorToggle: document.getElementById('cursor-toggle'),
+            themeToggle: document.getElementById('theme-toggle'),
+            toastContainer: document.getElementById('toast-container'),
+            durationStat: document.getElementById('duration-stat'),
+            sizeStat: document.getElementById('size-stat')
+        };
 
+        // Initialize
+        function init() {
+            loadThemePreference();
+            setupEventListeners();
+            updateStats();
+        }
+
+        // Theme Management
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+        }
+
+        function setTheme(theme) {
+            state.isDarkMode = theme === 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            const icon = elements.themeToggle.querySelector('svg');
+            if (theme === 'dark') {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+            }
+        }
+
+        function toggleTheme() {
+            setTheme(state.isDarkMode ? 'light' : 'dark');
+        }
+
+        // Toast Notifications
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />',
+                error: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />',
+                info: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />'
+            };
+
+            toast.innerHTML = `
+                <svg class="toast-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    ${icons[type]}
+                </svg>
+                <span class="toast-message">${message}</span>
+            `;
+
+            elements.toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            elements.startBtn.addEventListener('click', startRecording);
+            elements.stopBtn.addEventListener('click', stopRecording);
+            elements.pauseBtn.addEventListener('click', togglePause);
+            elements.downloadBtn.addEventListener('click', downloadRecording);
+            elements.themeToggle.addEventListener('click', toggleTheme);
+
+            // Toggle switches
+            [elements.systemAudioToggle, elements.micAudioToggle, elements.cursorToggle].forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    toggle.classList.toggle('active');
+                });
+            });
+        }
+
+        // Recording Functions
         async function startRecording() {
             try {
                 const displayMediaOptions = {
-                    video: { displaySurface: screenSource.value },
-                    audio: audioToggle.checked
+                    video: {
+                        displaySurface: elements.screenSource.value,
+                        frameRate: parseInt(elements.fpsSelect.value)
+                    },
+                    audio: elements.systemAudioToggle.classList.contains('active'),
+                    preferCurrentTab: true
                 };
 
-                stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
-                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+                // Get display media stream
+                state.stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
 
-                mediaRecorder.ondataavailable = (event) => {
-                    if (event.data.size > 0) {
-                        recordedChunks.push(event.data);
+                // Handle cursor visibility
+                const videoTrack = state.stream.getVideoTracks()[0];
+                if (videoTrack) {
+                    const capabilities = videoTrack.getCapabilities();
+                    if (capabilities.displaySurface !== undefined) {
+                        // Cursor handling is typically managed by the browser
+                        showToast('Cursor visibility depends on browser settings', 'info');
+                    }
+                }
+
+                // Get microphone audio if enabled
+                if (elements.micAudioToggle.classList.contains('active')) {
+                    try {
+                        state.audioStream = await navigator.mediaDevices.getUserMedia({ 
+                            audio: {
+                                echoCancellation: true,
+                                noiseSuppression: true,
+                                sampleRate: 44100
+                            } 
+                        });
+                        
+                        // Combine streams
+                        const audioTracks = state.audioStream.getAudioTracks();
+                        state.stream.addTrack(audioTracks[0]);
+                    } catch (error) {
+                        console.error('Microphone access denied:', error);
+                        showToast('Microphone access denied. Recording without mic audio.', 'error');
+                    }
+                }
+
+                // Setup MediaRecorder with quality settings
+                const quality = elements.qualitySelect.value;
+                const mimeType = getSupportedMimeType(quality);
+                
+                state.mediaRecorder = new MediaRecorder(state.stream, {
+                    mimeType: mimeType,
+                    videoBitsPerSecond: getBitrateForQuality(quality)
+                });
+
+                state.recordedChunks = [];
+
+                state.mediaRecorder.ondataavailable = (event) => {
+                    if (event.data && event.data.size > 0) {
+                        state.recordedChunks.push(event.data);
+                        updateFileSize();
                     }
                 };
 
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                    const url = URL.createObjectURL(blob);
-                    preview.src = url;
-                    downloadBtn.href = url;
-                    downloadBtn.download = 'screen-recording.webm';
-                    downloadBtn.disabled = false;
-                    recordedChunks = [];
+                state.mediaRecorder.onstop = handleRecordingStop;
+                state.mediaRecorder.onerror = (event) => {
+                    console.error('MediaRecorder error:', event.error);
+                    showToast(`Recording error: ${event.error.name}`, 'error');
+                    stopRecording();
                 };
 
-                mediaRecorder.start();
-                startBtn.disabled = true;
-                stopBtn.disabled = false;
+                // Start recording
+                state.mediaRecorder.start(1000); // Collect data every second
+                state.startTime = Date.now();
+                state.totalPausedDuration = 0;
+                state.isRecording = true;
+                state.isPaused = false;
+
+                // Update UI
+                updateUIState('recording');
+                
+                // Show live preview
+                state.preview.srcObject = state.stream;
+                state.preview.classList.add('visible');
+                elements.previewPlaceholder.style.display = 'none';
+                elements.previewContainer.classList.add('has-content');
+
+                // Start timer
+                startTimer();
+
+                // Auto-stop when user stops sharing
+                state.stream.getVideoTracks()[0].onended = () => {
+                    if (state.isRecording && !state.isPaused) {
+                        showToast('Screen sharing stopped', 'info');
+                        stopRecording();
+                    }
+                };
+
+                showToast('Recording started successfully!', 'success');
             } catch (error) {
                 console.error('Error starting recording:', error);
+                
+                if (error.name === 'NotAllowedError') {
+                    showToast('Permission denied. Please allow screen sharing.', 'error');
+                } else if (error.name === 'NotFoundError') {
+                    showToast('No screen/window/tab selected.', 'error');
+                } else {
+                    showToast(`Failed to start recording: ${error.message}`, 'error');
+                }
+                
+                cleanupStreams();
+            }
+        }
+
+        function getSupportedMimeType(quality) {
+            const mimeTypes = [
+                'video/webm;codecs=vp9,opus',
+                'video/webm;codecs=vp8,opus',
+                'video/webm;codecs=h264,opus',
+                'video/webm'
+            ];
+
+            for (const mimeType of mimeTypes) {
+                if (MediaRecorder.isTypeSupported(mimeType)) {
+                    return mimeType;
+                }
+            }
+            return 'video/webm';
+        }
+
+        function getBitrateForQuality(quality) {
+            const bitrates = {
+                high: 8000000,    // 8 Mbps
+                medium: 4000000,  // 4 Mbps
+                low: 2000000      // 2 Mbps
+            };
+            return bitrates[quality] || bitrates.medium;
+        }
+
+        function togglePause() {
+            if (!state.mediaRecorder || !state.isRecording) return;
+
+            if (state.isPaused) {
+                // Resume
+                state.mediaRecorder.resume();
+                state.isPaused = false;
+                
+                if (state.pauseTime) {
+                    state.totalPausedDuration += Date.now() - state.pauseTime;
+                    state.pauseTime = null;
+                }
+                
+                startTimer();
+                elements.pauseBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Pause
+                `;
+                showToast('Recording resumed', 'info');
+            } else {
+                // Pause
+                state.mediaRecorder.pause();
+                state.isPaused = true;
+                state.pauseTime = Date.now();
+                
+                stopTimer();
+                elements.pauseBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Resume
+                `;
+                showToast('Recording paused', 'info');
             }
         }
 
         function stopRecording() {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-                stream.getTracks().forEach(track => track.stop());
-                startBtn.disabled = false;
-                stopBtn.disabled = true;
+            if (!state.mediaRecorder || state.mediaRecorder.state === 'inactive') return;
+
+            state.mediaRecorder.stop();
+            stopTimer();
+        }
+
+        function handleRecordingStop() {
+            state.isRecording = false;
+            state.isPaused = false;
+
+            // Create blob and preview
+            const mimeType = state.mediaRecorder.mimeType || 'video/webm';
+            const blob = new Blob(state.recordedChunks, { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            
+            state.preview.srcObject = null;
+            state.preview.src = url;
+            state.preview.classList.add('visible');
+            elements.previewPlaceholder.style.display = 'none';
+            elements.previewContainer.classList.add('has-content');
+
+            // Setup download
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            const extension = mimeType.includes('webm') ? 'webm' : 'mp4';
+            elements.downloadBtn.dataset.url = url;
+            elements.downloadBtn.dataset.filename = `screen-recording-${timestamp}.${extension}`;
+
+            // Update UI
+            updateUIState('stopped');
+            
+            // Cleanup streams
+            cleanupStreams();
+
+            showToast('Recording completed successfully!', 'success');
+        }
+
+        function downloadRecording() {
+            const url = elements.downloadBtn.dataset.url;
+            const filename = elements.downloadBtn.dataset.filename;
+            
+            if (!url) {
+                showToast('No recording available to download', 'error');
+                return;
+            }
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            showToast('Download started', 'success');
+        }
+
+        // Timer Functions
+        function startTimer() {
+            stopTimer();
+            state.timerInterval = setInterval(updateTimer, 100);
+        }
+
+        function stopTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
             }
         }
 
-        startBtn.addEventListener('click', startRecording);
-        stopBtn.addEventListener('click', stopRecording);
+        function updateTimer() {
+            if (!state.startTime) return;
 
-        themeToggle.addEventListener('click', () => {
-            isDarkMode = !isDarkMode;
-            body.classList.toggle('dark-mode', isDarkMode);
-            themeToggle.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
-        });
+            const now = Date.now();
+            const elapsed = now - state.startTime - state.totalPausedDuration;
+            
+            const hours = Math.floor(elapsed / 3600000);
+            const minutes = Math.floor((elapsed % 3600000) / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            const milliseconds = elapsed % 1000;
+
+            const formatted = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            elements.timerDisplay.textContent = formatted;
+            elements.timerDisplay.classList.add('recording');
+
+            // Update stats
+            updateDurationStat(elapsed);
+        }
+
+        function updateDurationStat(elapsed) {
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            elements.durationStat.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function updateFileSize() {
+            if (state.recordedChunks.length === 0) {
+                elements.sizeStat.textContent = '0 MB';
+                return;
+            }
+
+            const totalSize = state.recordedChunks.reduce((acc, chunk) => acc + chunk.size, 0);
+            const sizeMB = (totalSize / (1024 * 1024)).toFixed(2);
+            elements.sizeStat.textContent = `${sizeMB} MB`;
+        }
+
+        function updateStats() {
+            elements.durationStat.textContent = '00:00';
+            elements.sizeStat.textContent = '0 MB';
+        }
+
+        // UI State Management
+        function updateUIState(recordingState) {
+            switch (recordingState) {
+                case 'recording':
+                    elements.startBtn.disabled = true;
+                    elements.stopBtn.disabled = false;
+                    elements.pauseBtn.disabled = false;
+                    elements.downloadBtn.disabled = true;
+                    elements.statusIndicator.classList.add('recording');
+                    elements.statusText.textContent = 'Recording...';
+                    elements.startBtn.innerHTML = `
+                        <div class="spinner"></div>
+                        Recording...
+                    `;
+                    break;
+
+                case 'paused':
+                    elements.statusText.textContent = 'Paused';
+                    elements.statusIndicator.classList.remove('recording');
+                    break;
+
+                case 'stopped':
+                default:
+                    elements.startBtn.disabled = false;
+                    elements.stopBtn.disabled = true;
+                    elements.pauseBtn.disabled = true;
+                    elements.downloadBtn.disabled = false;
+                    elements.statusIndicator.classList.remove('recording');
+                    elements.statusText.textContent = 'Ready';
+                    elements.timerDisplay.classList.remove('recording');
+                    elements.startBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Start Recording
+                    `;
+                    elements.pauseBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Pause
+                    `;
+                    break;
+            }
+        }
+
+        // Cleanup
+        function cleanupStreams() {
+            if (state.stream) {
+                state.stream.getTracks().forEach(track => track.stop());
+                state.stream = null;
+            }
+            if (state.audioStream) {
+                state.audioStream.getTracks().forEach(track => track.stop());
+                state.audioStream = null;
+            }
+            if (state.combinedStream) {
+                state.combinedStream.getTracks().forEach(track => track.stop());
+                state.combinedStream = null;
+            }
+        }
+
+        // Initialize app
+        init();
     </script>
 </body>
 </html>
