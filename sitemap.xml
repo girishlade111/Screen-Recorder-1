@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        
+    <!-- Main Page -->
+    <url>
+        <loc>https://proscreenrecorder.com/</loc>
+        <lastmod>2024-01-15T10:30:00+00:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Additional pages can be added here as the site grows -->
+    <!-- Example: Features page -->
+    <!--
+    <url>
+        <loc>https://proscreenrecorder.com/features</loc>
+        <lastmod>2024-01-15T10:30:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    -->
+    
+    <!-- Example: About page -->
+    <!--
+    <url>
+        <loc>https://proscreenrecorder.com/about</loc>
+        <lastmod>2024-01-15T10:30:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    -->
+    
+    <!-- Example: Blog page -->
+    <!--
+    <url>
+        <loc>https://proscreenrecorder.com/blog</loc>
+        <lastmod>2024-01-15T10:30:00+00:00</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    -->
+    
+    <!-- Example: Help/Documentation page -->
+    <!--
+    <url>
+        <loc>https://proscreenrecorder.com/help</loc>
+        <lastmod>2024-01-15T10:30:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    -->
+    
+    <!-- Example: Privacy Policy page -->
+    <!--
+    <url>
+        <loc>https://proscreenrecorder.com/privacy</loc>
+        <lastmod>2024-01-15T10:30:00+00:00</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    -->
+    
+    <!-- Example: Terms of Service page -->
+    <!--
+    <url>
+        <loc>https://proscreenrecorder.com/terms</loc>
+        <lastmod>2024-01-15T10:30:00+00:00</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    -->
+    
+</urlset>
